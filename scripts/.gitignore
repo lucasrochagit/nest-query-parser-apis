@@ -1,0 +1,8 @@
+## IDE
+.code/
+
+## Environment
+.env
+
+## Application
+node_modules/
