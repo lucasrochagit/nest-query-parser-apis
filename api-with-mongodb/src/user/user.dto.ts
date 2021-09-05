@@ -3,6 +3,7 @@ import {
   IsDefined,
   IsEmail,
   IsInt,
+  IsMongoId,
   IsNotEmpty,
   IsString,
   Matches,
@@ -52,6 +53,18 @@ export class CreateUserDTO {
       'skills should contains letters, space between words, hyphen and plus symbol',
   })
   skills: string[];
+
+  @ValidateIf((dto) => dto.current_job !== undefined)
+  @IsString()
+  @IsNotEmpty()
+  @IsMongoId()
+  current_job: string;
+
+  @ValidateIf((dto) => dto.jobs !== undefined)
+  @IsString({ each: true })
+  @IsNotEmpty({ each: true })
+  @IsMongoId({ each: true })
+  jobs: string[];
 }
 
 export class UpdateUserDTO {
@@ -93,4 +106,16 @@ export class UpdateUserDTO {
       'skills should contains letters, space between words, hyphen and plus symbol',
   })
   skills: string[];
+
+  @ValidateIf((dto) => dto.current_job !== undefined)
+  @IsString()
+  @IsNotEmpty()
+  @IsMongoId()
+  current_job: string;
+
+  @ValidateIf((dto) => dto.jobs !== undefined)
+  @IsString({ each: true })
+  @IsNotEmpty({ each: true })
+  @IsMongoId({ each: true })
+  jobs: string[];
 }

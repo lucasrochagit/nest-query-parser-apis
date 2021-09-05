@@ -9,21 +9,21 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { CreateUserDTO, UpdateUserDTO, UserDTO } from './user.dto';
-import { UserService } from './user.service';
 import { MongoQuery, MongoQueryModel } from 'nest-query-parser';
+import { CreateJobDTO, JobDTO, UpdateJobDTO } from './job.dto';
+import { JobService } from './job.service';
 
-@Controller('users')
-export class UserController {
-  constructor(private readonly service: UserService) {}
+@Controller('jobs')
+export class JobController {
+  constructor(private readonly service: JobService) {}
 
   @Post()
-  async create(@Body() userDTO: CreateUserDTO): Promise<UserDTO> {
-    return this.service.create(userDTO);
+  async create(@Body() jobDTO: CreateJobDTO): Promise<JobDTO> {
+    return this.service.create(jobDTO);
   }
 
   @Get()
-  async find(@MongoQuery() query: MongoQueryModel): Promise<UserDTO[]> {
+  async find(@MongoQuery() query: MongoQueryModel): Promise<JobDTO[]> {
     return this.service.find(query);
   }
 
@@ -31,17 +31,17 @@ export class UserController {
   async findById(
     @Param('id') id: string,
     @MongoQuery() query: MongoQueryModel,
-  ): Promise<UserDTO> {
+  ): Promise<JobDTO> {
     return this.service.findById(id, query);
   }
 
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Body() userDTO: UpdateUserDTO,
+    @Body() jobDTO: UpdateJobDTO,
     @MongoQuery() query: MongoQueryModel,
-  ): Promise<UserDTO> {
-    return this.service.updateById(id, userDTO, query);
+  ): Promise<JobDTO> {
+    return this.service.updateById(id, jobDTO, query);
   }
 
   @Delete(':id')

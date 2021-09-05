@@ -25,30 +25,45 @@ export class UserService {
 
   async find(query: MongoQueryModel): Promise<UserDTO[]> {
     const result = await this._model
-      .find(query.filter)
-      .limit(query.limit)
-      .skip(query.skip)
-      .sort(query.sort)
-      .select(query.select)
-      .exec();
+    .find(query.filter)
+    .limit(query.limit)
+    .skip(query.skip)
+    .sort(query.sort)
+    .select(query.select)
+    .populate(query.populate)
+    .exec();
     return result.map((item) =>
-      this.toDTOSerializer.serialize(item.toObject()),
+    this.toDTOSerializer.serialize(item.toObject()),
     );
   }
+  
+  async findById(_id: string, query: MongoQueryModel): Promise<UserDTO> {
+    const result = await this._model
+      .findOne({ _id })
+      .select(query.select)
+      .populate(query.populate)
+      .exec();
 
-  async findById(_id: string): Promise<UserDTO> {
-    const result = await this._model.findOne({ _id });
     if (!result) {
       throw new NotFoundException('User not found or already removed');
     }
     return this.toDTOSerializer.serialize(result.toObject());
   }
 
-  async updateById(_id: string, item: UserDTO): Promise<UserDTO> {
+  async updateById(
+    _id: string,
+    item: UserDTO,
+    query: MongoQueryModel,
+  ): Promise<UserDTO> {
     const user = this.toSchemaSerializer.serialize(item);
-    const result = await this._model.findOneAndUpdate({ _id }, user, {
-      new: true,
-    });
+    const result = await this._model
+      .findOneAndUpdate({ _id }, user, {
+        new: true,
+      })
+      .select(query.select)
+      .populate(query.populate)
+      .exec();
+
     if (!result) {
       throw new NotFoundException('User not found or already removed');
     }
