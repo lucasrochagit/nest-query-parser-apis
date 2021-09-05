@@ -3,13 +3,13 @@ const fs = require('fs')
 require('dotenv').config()
 
 
-const {DATABASE_URL, DATABASE_NAME} = process.env
-const client = new MongoClient(DATABASE_URL)
+const {MONGODB_DATABASE_URL, MONGODB_DATABASE_NAME} = process.env
+const client = new MongoClient(MONGODB_DATABASE_URL)
 
 async function main() {
     await client.connect()
     console.log('Connected successfully to server')
-    const db = client.db(DATABASE_NAME)
+    const db = client.db(MONGODB_DATABASE_NAME)
     const collection = db.collection('users')
 
     const data = fs.readFileSync('mongo.users.json')

@@ -1,5 +1,6 @@
 ## IDE
 .code/
+.idea/
 
 ## Environment
 .env
