@@ -18,7 +18,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       details: exception.toString(),
     };
 
-    if (ENV !== 'prod') {
+    if (ENV === 'prod') {
       delete generic_exception_body.details;
     }
 

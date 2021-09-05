@@ -30,24 +30,23 @@ export class UserService {
       .skip(query.skip)
       .sort(query.sort)
       .select(query.select)
-      .populate(query.populate)
       .exec();
     return result.map((item) =>
       this.toDTOSerializer.serialize(item.toObject()),
     );
   }
 
-  async findById(id: string): Promise<UserDTO> {
-    const result = await this._model.findById(id);
+  async findById(_id: string): Promise<UserDTO> {
+    const result = await this._model.findOne({ _id });
     if (!result) {
       throw new NotFoundException('User not found or already removed');
     }
     return this.toDTOSerializer.serialize(result.toObject());
   }
 
-  async updateById(id: string, item: UserDTO): Promise<UserDTO> {
+  async updateById(_id: string, item: UserDTO): Promise<UserDTO> {
     const user = this.toSchemaSerializer.serialize(item);
-    const result = await this._model.findByIdAndUpdate(id, user, {
+    const result = await this._model.findOneAndUpdate({ _id }, user, {
       new: true,
     });
     if (!result) {
@@ -56,7 +55,7 @@ export class UserService {
     return this.toDTOSerializer.serialize(result.toObject());
   }
 
-  async deleteById(id: string): Promise<void> {
-    await this._model.findByIdAndDelete(id);
+  async deleteById(_id: string): Promise<void> {
+    await this._model.findByIdAndDelete(_id);
   }
 }

@@ -11,7 +11,7 @@ import {
   ValidateIf,
 } from 'class-validator';
 
-export type UserDTO = {};
+export type UserDTO = CreateUserDTO & UpdateUserDTO;
 
 export class CreateUserDTO {
   @IsDefined()
@@ -37,7 +37,7 @@ export class CreateUserDTO {
   gender: string;
 
   @IsDefined()
-  @IsString() 
+  @IsString()
   @IsNotEmpty()
   @IsEmail()
   email: string;
@@ -78,7 +78,7 @@ export class UpdateUserDTO {
   gender: string;
 
   @ValidateIf((dto) => dto.email !== undefined)
-  @IsString() 
+  @IsString()
   @IsNotEmpty()
   @IsEmail()
   email: string;
