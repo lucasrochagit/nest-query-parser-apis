@@ -13,9 +13,11 @@ async function main() {
   const jobsCollection = db.collection("jobs");
 
   const usersJson = fs.readFileSync("mongo.users.json");
+  const usersAddressesJson = fs.readFileSync("mongo.users.addresses.json")
   const jobsJson = fs.readFileSync("mongo.jobs.json");
 
   const users = JSON.parse(usersJson);
+  const usersAddresses = JSON.parse(usersAddressesJson);
   const jobs = JSON.parse(jobsJson);
 
   const countJobs = await jobsCollection.countDocuments();
@@ -38,15 +40,15 @@ async function main() {
     const allJobsIndexes = allJobs.map((job) => job._id);
 
     await usersCollection.insertMany(
-      users.map((user) => {
+      users.map((user, index) => {
         const randomJob = new ObjectId(
           allJobsIndexes[getRandomIndex(jobs.length)]
         );
 
-        const prevJobsQtty = getRandomIndex(6, 2);
+        const prevJobsQty = getRandomIndex(6, 2);
 
         const randomJobs = Array.from(
-          { length: prevJobsQtty },
+          { length: prevJobsQty },
           () => new ObjectId(allJobsIndexes[getRandomIndex(jobs.length)])
         );
         randomJobs.push(randomJob);
@@ -54,6 +56,7 @@ async function main() {
         const now = new Date();
         user.created_at = now;
         user.updated_at = now;
+        user.address = usersAddresses[index];
         user.current_job = randomJob;
         user.jobs = randomJobs.filter(
           (item, pos) => randomJobs.indexOf(item) == pos
