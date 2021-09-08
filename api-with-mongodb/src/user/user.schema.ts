@@ -3,6 +3,12 @@ import { Document, SchemaTypes } from 'mongoose';
 
 export type UserDocument = User & Document;
 
+export type Address = {
+  street: string;
+  city: string;
+  state: string;
+};
+
 @Schema({
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
   versionKey: false,
@@ -22,6 +28,9 @@ export class User {
 
   @Prop()
   skills: string[];
+
+  @Prop({ type: Object })
+  address: Address;
 
   @Prop({ type: SchemaTypes.ObjectId, ref: 'Job' })
   current_job: string;

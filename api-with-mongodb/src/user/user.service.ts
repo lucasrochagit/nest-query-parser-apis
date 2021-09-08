@@ -25,18 +25,18 @@ export class UserService {
 
   async find(query: MongoQueryModel): Promise<UserDTO[]> {
     const result = await this._model
-    .find(query.filter)
-    .limit(query.limit)
-    .skip(query.skip)
-    .sort(query.sort)
-    .select(query.select)
-    .populate(query.populate)
-    .exec();
+      .find(query.filter)
+      .limit(query.limit)
+      .skip(query.skip)
+      .sort(query.sort)
+      .select(query.select)
+      .populate(query.populate)
+      .exec();
     return result.map((item) =>
-    this.toDTOSerializer.serialize(item.toObject()),
+      this.toDTOSerializer.serialize(item.toObject()),
     );
   }
-  
+
   async findById(_id: string, query: MongoQueryModel): Promise<UserDTO> {
     const result = await this._model
       .findOne({ _id })
