@@ -20,14 +20,14 @@ Example of `.env` configuration:
 
 ```
 # DATABASE_URL
-# description: url from database server
-# example: mongodb://<user>:<pwd>@<host>:<port> 
-DATABASE_URL=mongodb://localhost:27017
+# description: full url from database
+# example: mongodb://<user>:<pwd>@<host>:<port>/database
+DATABASE_URL=mongodb://<user>:<pwd>@<host>:<port>/<database>
 
-# DATABASE_NAME 
-# description: name of application database
-# example: api-with-mongodb
-DATABASE_NAME=api-with-mongodb
+# ENV
+# description: application environment 
+# example: dev, test, prod 
+ENV=dev
 ```
 
 ## Running the app

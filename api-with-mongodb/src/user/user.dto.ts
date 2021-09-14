@@ -10,9 +10,36 @@ import {
   Max,
   Min,
   ValidateIf,
+  ValidateNested,
 } from 'class-validator';
 
 export type UserDTO = CreateUserDTO & UpdateUserDTO;
+
+export class AddressDTO {
+  @IsDefined()
+  @IsString()
+  @IsNotEmpty()
+  @Matches(/^([A-ZÀ-Üa-zà-ü0-9]+\s?)*(?<! )$/, {
+    message: 'street should contains letters, numbers and space between words',
+  })
+  street: string;
+
+  @IsDefined()
+  @IsString()
+  @IsNotEmpty()
+  @Matches(/^([A-ZÀ-Üa-zà-ü0-9]+\s?)*(?<! )$/, {
+    message: 'city should contains letters, numbers and space between words',
+  })
+  city: string;
+
+  @IsDefined()
+  @IsString()
+  @IsNotEmpty()
+  @Matches(/^([A-ZÀ-Üa-zà-ü0-9]+\s?)*(?<! )$/, {
+    message: 'state should contains letters, numbers and space between words',
+  })
+  state: string;
+}
 
 export class CreateUserDTO {
   @IsDefined()
@@ -54,7 +81,9 @@ export class CreateUserDTO {
   })
   skills: string[];
 
-  @ValidateIf((dto) => dto.current_job !== undefined)
+  @ValidateNested()
+  address: AddressDTO;
+
   @IsString()
   @IsNotEmpty()
   @IsMongoId()
@@ -106,6 +135,10 @@ export class UpdateUserDTO {
       'skills should contains letters, space between words, hyphen and plus symbol',
   })
   skills: string[];
+
+  @ValidateIf((dto) => dto.address !== undefined)
+  @ValidateNested()
+  address: AddressDTO;
 
   @ValidateIf((dto) => dto.current_job !== undefined)
   @IsString()

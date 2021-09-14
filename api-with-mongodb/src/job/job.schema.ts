@@ -15,10 +15,7 @@ export class Job {
   salary: number;
 
   @Prop()
-  gender: string;
-
-  @Prop()
-  company: string;
+  enterprise: string;
 }
 
 export const JobSchema = SchemaFactory.createForClass(Job);

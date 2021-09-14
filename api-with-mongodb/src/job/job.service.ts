@@ -11,14 +11,13 @@ export class JobService {
   constructor(
     @InjectModel(Job.name)
     private readonly _model: Model<JobDocument>,
-    private readonly toSchemaSerializer: Serializer<JobDTO, Job>,
-    private readonly toDTOSerializer: Serializer<Job, JobDTO>,
+    private readonly _serializer: Serializer<JobDTO, Job>,
   ) {}
 
   async create(item: JobDTO): Promise<JobDTO> {
-    const job = this.toSchemaSerializer.serialize(item);
+    const job = this._serializer.deserialize(item);
     const result = await this._model.create(job);
-    return this.toDTOSerializer.serialize(result.toObject(), {
+    return this._serializer.serialize(result.toObject(), {
       ignoreFromSource: ['updated_at'],
     });
   }
@@ -31,9 +30,7 @@ export class JobService {
       .sort(query.sort)
       .select(query.select)
       .exec();
-    return result.map((item) =>
-      this.toDTOSerializer.serialize(item.toObject()),
-    );
+    return result.map((item) => this._serializer.serialize(item.toObject()));
   }
 
   async findById(_id: string, query: MongoQueryModel): Promise<JobDTO> {
@@ -45,7 +42,7 @@ export class JobService {
     if (!result) {
       throw new NotFoundException('Job not found or already removed');
     }
-    return this.toDTOSerializer.serialize(result.toObject());
+    return this._serializer.serialize(result.toObject());
   }
 
   async updateById(
@@ -53,7 +50,7 @@ export class JobService {
     item: JobDTO,
     query: MongoQueryModel,
   ): Promise<JobDTO> {
-    const job = this.toSchemaSerializer.serialize(item);
+    const job = this._serializer.serialize(item);
     const result = await this._model
       .findOneAndUpdate({ _id }, job, {
         new: true,
@@ -63,7 +60,7 @@ export class JobService {
     if (!result) {
       throw new NotFoundException('Job not found or already removed');
     }
-    return this.toDTOSerializer.serialize(result.toObject());
+    return this._serializer.serialize(result.toObject());
   }
 
   async deleteById(_id: string): Promise<void> {

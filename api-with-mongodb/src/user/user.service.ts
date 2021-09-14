@@ -11,14 +11,13 @@ export class UserService {
   constructor(
     @InjectModel(User.name)
     private readonly _model: Model<UserDocument>,
-    private readonly toSchemaSerializer: Serializer<UserDTO, User>,
-    private readonly toDTOSerializer: Serializer<User, UserDTO>,
+    private readonly _serializer: Serializer<UserDTO, User>,
   ) {}
 
   async create(item: UserDTO): Promise<UserDTO> {
-    const user = this.toSchemaSerializer.serialize(item);
+    const user = this._serializer.deserialize(item);
     const result = await this._model.create(user);
-    return this.toDTOSerializer.serialize(result.toObject(), {
+    return this._serializer.serialize(result.toObject(), {
       ignoreFromSource: ['updated_at'],
     });
   }
@@ -33,7 +32,7 @@ export class UserService {
       .populate(query.populate)
       .exec();
     return result.map((item) =>
-      this.toDTOSerializer.serialize(item.toObject()),
+      this._serializer.serialize(item.toObject()),
     );
   }
 
@@ -47,7 +46,7 @@ export class UserService {
     if (!result) {
       throw new NotFoundException('User not found or already removed');
     }
-    return this.toDTOSerializer.serialize(result.toObject());
+    return this._serializer.serialize(result.toObject());
   }
 
   async updateById(
@@ -55,7 +54,7 @@ export class UserService {
     item: UserDTO,
     query: MongoQueryModel,
   ): Promise<UserDTO> {
-    const user = this.toSchemaSerializer.serialize(item);
+    const user = this._serializer.serialize(item);
     const result = await this._model
       .findOneAndUpdate({ _id }, user, {
         new: true,
@@ -67,7 +66,7 @@ export class UserService {
     if (!result) {
       throw new NotFoundException('User not found or already removed');
     }
-    return this.toDTOSerializer.serialize(result.toObject());
+    return this._serializer.serialize(result.toObject());
   }
 
   async deleteById(_id: string): Promise<void> {
