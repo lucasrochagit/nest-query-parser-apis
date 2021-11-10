@@ -20,10 +20,10 @@ Example of `.env` configuration:
 # example: mongodb://<user>:<pwd>@<host>:<port> 
 MONGODB_DATABASE_URL=mongodb://localhost:27017
 
-# MONGODB_DATABASE_URL
+# MONGODB_DATABASE_NAME
 # description: name of mongodb application database
 # example: api-with-mongodb
-MONGODB_DATABASE_URL=api-with-mongodb
+MONGODB_DATABASE_NAME=api-with-mongodb
 ```
 
 ## Running the scripts
